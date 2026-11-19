@@ -238,8 +238,11 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
     padding: clamp(16px, 3vh, 28px) clamp(18px, 2.6vw, 32px) 0;
   }
 
-  .profile, .switch, .stats { grid-column: 1 / -1 }
+  .stats { grid-column: 1 / -1 }
   .profile, .stats { margin: 0 }
+  .profile { gap: clamp(8px, 1.4vw, 16px) }
+  .profile .live { margin-left: 0; padding-inline: 8px }
+  .switch { align-self: center }
   .profile .avatar { width: 54px; font-size: 27px }
   .profile h1 { font-size: 24px }
   .profile p { font-size: 16px }
@@ -273,6 +276,14 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
   .navigation { margin-top: clamp(14px, 3vh, 28px) }
   .toolbar { min-height: 66px; padding: 6px 12px }
   .toolbar a, .toolbar button { width: 52px; font-size: 26px }
+}
+
+@media (min-width: 900px) and (max-height: 800px) {
+  .dashboard { margin-block: 12px }
+  .dashboard main { padding-top: 14px; row-gap: 10px }
+  .client .timer { line-height: 1.2 }
+  .recommended { margin-block: 8px }
+  .navigation { margin-top: 12px }
 }
 
 @media (max-width: 600px) {
