@@ -101,24 +101,26 @@ function addService() {
         <button class="finish" :disabled="!active" @click="active = false; editing = false"><DashboardIcon name="check" /> {{ active ? 'Завершить выполнение' : 'Выполнение завершено' }}</button>
       </section>
 
-      <section id="queue" class="queue">
-        <button class="queue-button" :aria-expanded="queueOpen" @click="queueOpen = !queueOpen">
-          <span class="queue-top"><span>Следующий в очереди</span><span><DashboardIcon name="people" /> Ожидают: 4</span></span>
-          <span class="queue-person"><span class="avatar"><DashboardIcon name="user" /></span><span><strong>Григорьев Алексей</strong><small>Сегодня, 08:30</small></span><DashboardIcon class="queue-arrow" name="chevron" /></span>
-        </button>
-        <p v-if="queueOpen" class="queue-detail">Григорьев Алексей — первый в очереди. Всего ожидают 4 клиента.</p>
-      </section>
+      <div class="schedule">
+        <section id="queue" class="queue">
+          <button class="queue-button" :aria-expanded="queueOpen" @click="queueOpen = !queueOpen">
+            <span class="queue-top"><span>Следующий в очереди</span><span><DashboardIcon name="people" /> Ожидают: 4</span></span>
+            <span class="queue-person"><span class="avatar"><DashboardIcon name="user" /></span><span><strong>Григорьев Алексей</strong><small>Сегодня, 08:30</small></span><DashboardIcon class="queue-arrow" name="chevron" /></span>
+          </button>
+          <p v-if="queueOpen" class="queue-detail">Григорьев Алексей — первый в очереди. Всего ожидают 4 клиента.</p>
+        </section>
 
-      <section id="appointments" class="appointments" aria-labelledby="appointments-title">
-        <header><span class="round"><DashboardIcon name="calendar" /></span><div><h2 id="appointments-title">Предстоящие онлайн-записи</h2><p>Будьте на рабочем месте в указанное время</p></div></header>
-        <ul>
-          <li v-for="appointment in appointments" :key="appointment.time">
-            <span class="video"><DashboardIcon name="video" /></span>
-            <div><strong>Сегодня, {{ appointment.time }}</strong><small>Онлайн-консультация ({{ appointment.minutes }} минут)</small></div>
-            <span class="pill">Через {{ appointment.in }}</span>
-          </li>
-        </ul>
-      </section>
+        <section id="appointments" class="appointments" aria-labelledby="appointments-title">
+          <header><span class="round"><DashboardIcon name="calendar" /></span><div><h2 id="appointments-title">Предстоящие онлайн-записи</h2><p>Будьте на рабочем месте в указанное время</p></div></header>
+          <ul>
+            <li v-for="appointment in appointments" :key="appointment.time">
+              <span class="video"><DashboardIcon name="video" /></span>
+              <div><strong>Сегодня, {{ appointment.time }}</strong><small>Онлайн-консультация ({{ appointment.minutes }} минут)</small></div>
+              <span class="pill">Через {{ appointment.in }}</span>
+            </li>
+          </ul>
+        </section>
+      </div>
     </main>
 
     <div class="navigation">
@@ -221,6 +223,58 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .toolbar .selected{background:var(--orange);color:#fff}
 .quick-menu{position:absolute;bottom:calc(100% + 6px);right:10px;display:grid;gap:8px;padding:12px;background:white;border-radius:12px;box-shadow:0 4px 20px #0002}
 .quick-menu a{color:#006d71}
+@media (min-width: 900px) {
+  .dashboard {
+    width: min(calc(100% - 48px), 1240px);
+    min-height: auto;
+    margin: clamp(16px, 4vh, 40px) auto;
+  }
+
+  .dashboard main {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: clamp(12px, 2vh, 20px) clamp(14px, 2vw, 24px);
+    align-items: start;
+    padding: clamp(16px, 3vh, 28px) clamp(18px, 2.6vw, 32px) 0;
+  }
+
+  .profile, .switch, .stats { grid-column: 1 / -1 }
+  .profile, .stats { margin: 0 }
+  .profile .avatar { width: 54px; font-size: 27px }
+  .profile h1 { font-size: 24px }
+  .profile p { font-size: 16px }
+  .live { font-size: 15px }
+  .switch button { min-height: 48px; font-size: 20px }
+  .stat { min-width: 0; padding-block: 8px }
+  .stat .round { width: 44px; font-size: 22px }
+  .stat strong { font-size: 23px }
+
+  .client, .schedule { min-width: 0 }
+  .client-heading, .client-name { padding-inline: 4px }
+  .client-name { font-size: clamp(13px, 1.35vw, 16px) }
+  .timer { width: min(88%, 460px); font-size: clamp(46px, 5.5vw, 68px) }
+  .recommended { margin-block: 12px; font-size: clamp(14px, 1.5vw, 17px) }
+  .services li strong { overflow-wrap: anywhere }
+  .finish { min-height: 48px; margin-top: 10px; font-size: 20px }
+
+  .schedule { display: grid; gap: clamp(12px, 2vh, 20px) }
+  .schedule .queue, .schedule .appointments { margin: 0 }
+  .queue-top { font-size: clamp(12px, 1.3vw, 15px) }
+  .appointments header { gap: 8px }
+  .appointments header .round { width: 40px; font-size: 24px }
+  .appointments h2 { font-size: clamp(16px, 1.6vw, 20px) }
+  .appointments p, .appointments small { font-size: clamp(11px, 1.15vw, 14px) }
+  .appointments ul { padding-inline: 8px }
+  .appointments li { gap: 8px; padding-block: 7px }
+  .appointments li strong { font-size: clamp(12px, 1.25vw, 15px) }
+  .appointments li .pill { font-size: clamp(10px, 1.05vw, 13px) }
+  .video { width: clamp(32px, 3.5vw, 46px); height: 32px; font-size: 19px }
+
+  .navigation { margin-top: clamp(14px, 3vh, 28px) }
+  .toolbar { min-height: 66px; padding: 6px 12px }
+  .toolbar a, .toolbar button { width: 52px; font-size: 26px }
+}
+
 @media (max-width: 600px) {
   .dashboard {
     width: calc(100% - 10px);
