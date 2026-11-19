@@ -1,12 +1,16 @@
 <script setup lang="ts">
+definePageMeta({ alias: '/demo/empty-queue' })
+
+const route = useRoute()
+const emptyQueueDemo = route.path.replace(/\/$/, '') === '/demo/empty-queue'
 useHead({ title: 'Blitz Master — Рабочий экран', htmlAttrs: { lang: 'ru' } })
 
 const working = ref(true)
-const currentClient = ref<{ name: string, startedAt: string } | null>({
+const currentClient = ref<{ name: string, startedAt: string } | null>(emptyQueueDemo ? null : {
   name: 'Иляхин Сергей',
   startedAt: 'Сегодня, 08:00',
 })
-const queue = ref([
+const queue = ref(emptyQueueDemo ? [] : [
   { name: 'Григорьев Алексей', arrival: 'Сегодня, 08:30' },
   { name: 'Соколова Анна', arrival: 'Сегодня, 08:45' },
   { name: 'Орлов Дмитрий', arrival: 'Сегодня, 09:00' },
