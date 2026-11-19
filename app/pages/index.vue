@@ -128,9 +128,9 @@ function addService() {
         <a href="#appointments" @click="menuOpen = false">Онлайн-записи</a>
       </nav>
       <nav class="toolbar" aria-label="Основная навигация">
-        <a href="#appointments" aria-label="Онлайн-записи"><DashboardIcon name="calendar" /></a>
+        <a href="#appointments" aria-label="Онлайн-записи"><DashboardIcon name="booking" /></a>
         <a href="#work" class="selected" aria-label="Рабочий экран"><DashboardIcon name="grid" /></a>
-        <a href="#queue" aria-label="Очередь"><DashboardIcon name="people" /></a>
+        <a href="#queue" aria-label="Очередь"><DashboardIcon name="network" /></a>
         <button aria-label="Меню" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen"><DashboardIcon name="menu" /></button>
       </nav>
     </div>
@@ -162,7 +162,7 @@ svg{width:1.25em;height:1.25em;flex:none}
 i{width:.65em;height:.65em;border-radius:50%;background:#00bd16;flex:none}
 .switch{display:grid;grid-template-columns:1fr 1fr;background:#e7e9f1;border-radius:40px;padding:3px}
 .switch button{border:0;border-radius:40px;justify-content:center;gap:.65em;min-height:clamp(42px,9.5vw,64px);background:transparent;font-weight:650;font-size:clamp(17px,3.3vw,24px);color:inherit}
-.switch button[aria-pressed=true]{background:var(--teal);color:white}
+.switch button[aria-pressed=true]{background:linear-gradient(120deg,#007e87,#00777c);color:white}
 .switch button[aria-pressed=false] svg{color:#626b80}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:clamp(6px,3vw,21px);margin:13px 0 16px}
 .stat{background:#e8f3f5;border-radius:17px;padding:10px clamp(6px,2.2vw,17px);gap:clamp(6px,2vw,17px);color:var(--muted);font-size:clamp(10px,2.4vw,16px);font-weight:650;position:relative}
@@ -172,14 +172,14 @@ i{width:.65em;height:.65em;border-radius:50%;background:#00bd16;flex:none}
 .stat strong{display:block;font-size:clamp(16px,3.5vw,26px);font-variant-numeric:tabular-nums;color:#667187}
 .count{margin:auto 0 0 auto;padding:4px 8px;font-size:clamp(9px,2vw,15px)}
 .client,.queue,.appointments{border:1px solid #b9e4e3;border-radius:22px}
-.client{background:#f5fafb;padding:clamp(9px,1.7vw,13px)}
+.client{background:linear-gradient(145deg,#eef7fa,#f9faff);padding:clamp(9px,1.7vw,13px)}
 .client-heading,.services-heading{justify-content:space-between;gap:6px}
 .client-heading,.client-name{padding-inline:clamp(3px,2vw,16px)}
 .client h2{font-size:clamp(17px,3.5vw,25px);letter-spacing:-.035em}
 .pill{background:var(--mint);color:#006d71;display:inline-flex;align-items:center;gap:.5em;padding:.4em .75em;font-size:clamp(10px,2.2vw,16px);font-weight:700;border:0}
 .client-name{gap:10px;color:var(--muted);font-size:clamp(11px,2.45vw,17px);font-weight:600;margin:5px 0 12px}
 .client-name .avatar{width:clamp(26px,5vw,36px);border-radius:50%;font-size:clamp(12px,2.5vw,19px)}
-.timer{width:min(80%,460px);margin:auto;text-align:center;background:#c5eaea;border-radius:100px;font-size:clamp(40px,10vw,75px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1.35}
+.timer{width:min(70%,460px);margin:auto;text-align:center;background:linear-gradient(110deg,#bde6e6,#caebeb);border-radius:100px;font-size:clamp(40px,10vw,75px);font-weight:800;letter-spacing:-.035em;font-variant-numeric:tabular-nums;line-height:1.35}
 .recommended{justify-content:center;gap:clamp(5px,2vw,16px);margin:16px 0;color:var(--muted);font-size:clamp(11px,2.4vw,18px);font-weight:600}
 .recommended svg,.recommended strong{font-size:1.35em}
 .recommended strong{color:#101725}
@@ -193,7 +193,7 @@ i{width:.65em;height:.65em;border-radius:50%;background:#00bd16;flex:none}
 .service-form label{display:grid;gap:3px;font-size:13px}
 .service-form input{max-width:100%;width:12em;border:1px solid #a4b2be;border-radius:6px;padding:4px}
 .service-form input[type=number]{width:5em}
-.finish{background:var(--orange);color:#161b27;border:0;border-radius:16px;width:100%;min-height:clamp(43px,8vw,57px);margin-top:14px;justify-content:center;gap:.7em;font-weight:750;font-size:clamp(16px,3.3vw,23px)}
+.finish{background:linear-gradient(115deg,#e84523,#da3918);color:#fff;border:0;border-radius:16px;width:100%;min-height:clamp(43px,8vw,57px);margin-top:14px;justify-content:center;gap:.7em;font-weight:750;font-size:clamp(16px,3.3vw,23px)}
 .finish:disabled{background:#d9eeee;color:#006d71}
 .queue,.appointments{margin-top:12px}
 .queue{border-color:#e0e4ef}
@@ -216,10 +216,70 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .appointments li .pill{margin-left:auto;font-size:clamp(8px,1.9vw,14px)}
 .video{background:var(--mint);color:var(--teal);width:clamp(25px,7.5vw,55px);height:clamp(24px,5vw,38px);border-radius:12px;font-size:clamp(13px,3vw,23px)}
 .navigation{position:relative;margin-top:clamp(18px,5vw,42px)}
-.toolbar{background:var(--teal);color:white;border-radius:24px;justify-content:space-around;padding:10px;min-height:clamp(62px,14vw,110px)}
+.toolbar{background:linear-gradient(110deg,#00777f,#007479);color:white;border-radius:24px;justify-content:space-around;padding:10px;min-height:clamp(62px,14vw,110px)}
 .toolbar a,.toolbar button{display:grid;place-items:center;color:inherit;background:none;border:0;border-radius:50%;width:clamp(40px,11vw,80px);aspect-ratio:1;font-size:clamp(22px,5vw,40px)}
-.toolbar .selected{background:var(--orange);color:#161b27}
+.toolbar .selected{background:var(--orange);color:#fff}
 .quick-menu{position:absolute;bottom:calc(100% + 6px);right:10px;display:grid;gap:8px;padding:12px;background:white;border-radius:12px;box-shadow:0 4px 20px #0002}
 .quick-menu a{color:#006d71}
-@media(max-width:530px){.count{position:absolute;right:5px;bottom:5px}.stat.break{padding-bottom:20px}.appointments ul{padding-inline:6px}.client-heading .pill{padding-inline:6px}}
+@media (max-width: 600px) {
+  .dashboard {
+    width: calc(100% - 10px);
+    margin: 4px auto;
+    min-height: calc(100dvh - 8px);
+    border-radius: 18px;
+  }
+
+  .dashboard main { padding: 12px clamp(9px, 3vw, 18px) 0 }
+  .profile { margin: 0 5px 13px; gap: clamp(7px, 3vw, 16px) }
+  .profile .avatar { width: clamp(32px, 9vw, 52px); border-radius: 10px }
+  .profile h1 { font-size: clamp(14px, 3.8vw, 22px) }
+  .profile p { font-size: clamp(12px, 3vw, 17px); margin-top: 3px }
+  .live { padding: 6px 7px; gap: 5px }
+  .live-check { border-radius: 4px; padding: 2px }
+
+  .switch { padding: 2px }
+  .switch button { min-height: 40px }
+  .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin: 8px 0 10px }
+  .stat { border-radius: 12px; padding: 6px; min-height: 47px; line-height: 1.2 }
+  .stat .round { width: clamp(25px, 7vw, 44px) }
+  .stat strong { margin-top: 3px }
+  .count { margin: auto 0 0 auto; padding: 3px 4px }
+
+  .client, .queue, .appointments { border-radius: 15px }
+  .client { padding: 7px }
+  .client-heading, .client-name { padding-inline: 3px }
+  .client-heading .pill { padding-inline: 6px }
+  .client-name { gap: 6px; margin: 3px 0 8px }
+  .timer { width: 69%; font-size: clamp(33px, 10vw, 58px); line-height: 1.39 }
+  .recommended { margin: 10px 0 12px }
+  .services { padding: 5px 6px; border-radius: 11px }
+  .services ul, .appointments ul { border-radius: 8px; padding-inline: 7px }
+  .services li { padding-block: 4px }
+  .services li strong { overflow-wrap: anywhere }
+  .finish { min-height: 44px; border-radius: 11px; margin-top: 8px }
+  .queue, .appointments { margin-top: 8px }
+  .queue-button { padding-block: 6px }
+  .queue-person { gap: 8px }
+  .appointments { padding: 4px }
+  .appointments header { padding: 0 4px 4px; gap: 7px }
+  .appointments li { gap: 6px; padding-block: 4px }
+  .appointments li .pill { padding-inline: 5px }
+  .video { border-radius: 7px }
+
+  .navigation { margin-top: clamp(16px, 5vw, 28px) }
+  .toolbar {
+    min-height: 59px;
+    padding: 5px 6px max(5px, env(safe-area-inset-bottom));
+    border-radius: 20px 20px 15px 15px;
+  }
+  .toolbar a, .toolbar button { width: clamp(44px, 11vw, 64px) }
+}
+
+@media (max-width: 360px) {
+  .stat { gap: 4px }
+  .stat.break { display: grid; grid-template-columns: auto minmax(0, 1fr) }
+  .break .count { grid-column: 2; justify-self: start; margin: 0 }
+  .appointments li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto }
+  .appointments li .pill { white-space: normal; max-width: 76px; text-align: center }
+}
 </style>
