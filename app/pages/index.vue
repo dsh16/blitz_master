@@ -35,19 +35,37 @@ const appointments = [
   { time: '17:30 – 18:00', minutes: 30, in: '8 ч 53 мин' },
 ]
 const dashboard = ref<HTMLElement | null>(null)
+const clientArea = ref<HTMLElement | null>(null)
+const clientAreaHeight = ref(0)
 const desktopScale = ref(1)
-let dashboardObserver: ResizeObserver | undefined
+let measuredWidth = 0
+let desktopHeight = 0
 let timer: ReturnType<typeof setInterval>
 
-function fitDesktop() {
-  const height = dashboard.value?.offsetHeight
-  if (height) desktopScale.value = Math.min(1, Math.max(1, window.innerHeight - 12) / height)
+function reserveClientArea() {
+  if (!clientArea.value) return
+  const height = Number.parseFloat(getComputedStyle(clientArea.value).height)
+  clientAreaHeight.value = Math.max(clientAreaHeight.value, height)
 }
-onMounted(() => {
-  if (dashboard.value) {
-    dashboardObserver = new ResizeObserver(fitDesktop)
-    dashboardObserver.observe(dashboard.value)
+
+function fitDesktop() {
+  if (window.innerWidth < 900) {
+    measuredWidth = 0
+    return
   }
+
+  // Measure once per width so changing clients never rescales the whole dashboard.
+  if (measuredWidth !== window.innerWidth) {
+    measuredWidth = window.innerWidth
+    desktopHeight = dashboard.value?.offsetHeight ?? 0
+  }
+  if (desktopHeight) {
+    desktopScale.value = Math.min(1, Math.max(1, window.innerHeight - 12) / desktopHeight)
+  }
+}
+
+onMounted(() => {
+  reserveClientArea()
   window.addEventListener('resize', fitDesktop)
   fitDesktop()
   timer = setInterval(() => {
@@ -61,7 +79,6 @@ onMounted(() => {
 })
 onUnmounted(() => {
   clearInterval(timer)
-  dashboardObserver?.disconnect()
   window.removeEventListener('resize', fitDesktop)
 })
 
@@ -76,15 +93,17 @@ function setWorking(value: boolean) {
 }
 
 function finishService() {
+  reserveClientArea()
   completed.value = true
   editing.value = false
 }
 
 async function closeCompletedClient() {
+  reserveClientArea()
   currentClient.value = null
   completed.value = false
   await nextTick()
-  clientTitle.value?.focus()
+  clientTitle.value?.focus({ preventScroll: true })
 }
 
 async function acceptClient() {
@@ -100,7 +119,7 @@ async function acceptClient() {
   serviceMinutes.value = 15
   queueOpen.value = false
   await nextTick()
-  clientTitle.value?.focus()
+  clientTitle.value?.focus({ preventScroll: true })
 }
 
 function addService() {
@@ -132,51 +151,53 @@ function addService() {
         <div class="stat break"><span class="round"><DashboardIcon name="cup" /></span><div>Перерывы сегодня<strong>{{ time(breakTime) }}</strong></div><span class="count">{{ breakCount }} раза</span></div>
       </div>
 
-      <section v-if="currentClient" class="client" aria-labelledby="client-title">
-        <div class="client-heading">
-          <h2 id="client-title" ref="clientTitle" tabindex="-1">{{ !completed ? 'Клиент в работе' : 'Услуга завершена' }}</h2>
-          <span class="pill" role="status"><i /> {{ !completed ? (working ? 'Выполнение услуги' : 'На паузе') : 'Выполнено' }}</span>
-        </div>
-        <p class="client-name"><span class="avatar"><DashboardIcon name="user" /></span> {{ currentClient.name }} · Начало: {{ currentClient.startedAt }}</p>
-        <div class="timer">{{ time(elapsed) }}</div>
-        <div class="recommended"><DashboardIcon name="timer" /><span>Рекомендуемое время:</span><strong>{{ recommended }} мин</strong></div>
-
-        <div class="services">
-          <div class="services-heading">
-            <span>Услуги ({{ services.length }})</span>
-            <button v-if="!completed" class="pill" :aria-expanded="editing" @click="editing = !editing"><DashboardIcon name="plus" /> Добавить услугу</button>
+      <div ref="clientArea" class="client-area" :style="{ minHeight: clientAreaHeight ? clientAreaHeight + 'px' : undefined }">
+        <section v-if="currentClient" class="client" aria-labelledby="client-title">
+          <div class="client-heading">
+            <h2 id="client-title" ref="clientTitle" tabindex="-1">{{ !completed ? 'Клиент в работе' : 'Услуга завершена' }}</h2>
+            <span class="pill" role="status"><i /> {{ !completed ? (working ? 'Выполнение услуги' : 'На паузе') : 'Выполнено' }}</span>
           </div>
-          <form v-if="editing && !completed" class="service-form" @submit.prevent="addService">
-            <label>Название<input v-model="serviceName" required maxlength="80"></label>
-            <label>Минуты<input v-model.number="serviceMinutes" type="number" required min="1" max="480"></label>
-            <button class="pill" type="submit">Добавить</button>
-          </form>
-          <ul>
-            <li v-for="(service, index) in services" :key="index"><strong>{{ service.name }}</strong><span>{{ service.minutes }} мин</span></li>
-          </ul>
-        </div>
+          <p class="client-name"><span class="avatar"><DashboardIcon name="user" /></span> {{ currentClient.name }} · Начало: {{ currentClient.startedAt }}</p>
+          <div class="timer">{{ time(elapsed) }}</div>
+          <div class="recommended"><DashboardIcon name="timer" /><span>Рекомендуемое время:</span><strong>{{ recommended }} мин</strong></div>
 
-        <button class="finish" @click="completed ? closeCompletedClient() : finishService()">
-          <DashboardIcon name="check" /> {{ completed ? 'Закрыть экран' : 'Завершить выполнение' }}
-        </button>
-      </section>
-      <section v-else class="client next-client" aria-labelledby="next-client-title">
-        <span class="round"><DashboardIcon :name="nextClient ? 'user' : 'people'" /></span>
-        <h2 id="next-client-title" ref="clientTitle" tabindex="-1">{{ nextClient ? 'Следующий клиент' : 'Пока клиентов нет' }}</h2>
-        <template v-if="nextClient">
-          <p><strong>{{ nextClient.name }}</strong> · {{ nextClient.arrival }}</p>
-          <button class="finish" @click="acceptClient"><DashboardIcon name="play" /> Принять клиента</button>
-        </template>
-        <p v-else>Очередь пуста.</p>
-      </section>
+          <div class="services">
+            <div class="services-heading">
+              <span>Услуги ({{ services.length }})</span>
+              <button class="pill" :class="{ invisible: completed }" :disabled="completed" :aria-expanded="editing" @click="editing = !editing"><DashboardIcon name="plus" /> Добавить услугу</button>
+            </div>
+            <form v-if="editing && !completed" class="service-form" @submit.prevent="addService">
+              <label>Название<input v-model="serviceName" required maxlength="80"></label>
+              <label>Минуты<input v-model.number="serviceMinutes" type="number" required min="1" max="480"></label>
+              <button class="pill" type="submit">Добавить</button>
+            </form>
+            <ul>
+              <li v-for="(service, index) in services" :key="index"><strong>{{ service.name }}</strong><span>{{ service.minutes }} мин</span></li>
+            </ul>
+          </div>
 
-      <section v-if="currentClient && nextClient" id="queue" class="queue">
-        <button class="queue-button" :aria-expanded="queueOpen" @click="queueOpen = !queueOpen">
-          <span class="queue-top"><span>Следующий в очереди</span><span><DashboardIcon name="people" /> Ожидают: {{ queue.length }}</span></span>
-          <span class="queue-person"><span class="avatar"><DashboardIcon name="user" /></span><span><strong>{{ nextClient.name }}</strong><small>{{ nextClient.arrival }}</small></span><DashboardIcon class="queue-arrow" name="chevron" /></span>
-        </button>
-        <p v-if="queueOpen" class="queue-detail">{{ queue.map(client => client.name).join(' · ') }}</p>
-      </section>
+          <button class="finish" @click="completed ? closeCompletedClient() : finishService()">
+            <DashboardIcon name="check" /> {{ completed ? 'Закрыть экран' : 'Завершить выполнение' }}
+          </button>
+        </section>
+        <section v-else class="client next-client" aria-labelledby="next-client-title">
+          <span class="round"><DashboardIcon :name="nextClient ? 'user' : 'people'" /></span>
+          <h2 id="next-client-title" ref="clientTitle" tabindex="-1">{{ nextClient ? 'Следующий клиент' : 'Пока клиентов нет' }}</h2>
+          <template v-if="nextClient">
+            <p><strong>{{ nextClient.name }}</strong> · {{ nextClient.arrival }}</p>
+            <button class="finish" @click="acceptClient"><DashboardIcon name="play" /> Принять клиента</button>
+          </template>
+          <p v-else>Очередь пуста.</p>
+        </section>
+
+        <section v-if="currentClient && nextClient" id="queue" class="queue">
+          <button class="queue-button" :aria-expanded="queueOpen" @click="queueOpen = !queueOpen">
+            <span class="queue-top"><span>Следующий в очереди</span><span><DashboardIcon name="people" /> Ожидают: {{ queue.length }}</span></span>
+            <span class="queue-person"><span class="avatar"><DashboardIcon name="user" /></span><span><strong>{{ nextClient.name }}</strong><small>{{ nextClient.arrival }}</small></span><DashboardIcon class="queue-arrow" name="chevron" /></span>
+          </button>
+          <p v-if="queueOpen" class="queue-detail">{{ queue.map(client => client.name).join(' · ') }}</p>
+        </section>
+      </div>
 
       <section id="appointments" class="appointments" aria-labelledby="appointments-title">
         <header><span class="round"><DashboardIcon name="calendar" /></span><div><h2 id="appointments-title">Предстоящие онлайн-записи</h2><p>Будьте на рабочем месте в указанное время</p></div></header>
@@ -289,6 +310,8 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .toolbar .selected{background:var(--orange);color:#fff}
 .quick-menu{position:absolute;bottom:calc(100% + 6px);right:10px;display:grid;gap:8px;padding:12px;background:white;border-radius:12px;box-shadow:0 4px 20px #0002}
 .quick-menu a{color:#006d71}
+.client-area { display: flow-root }
+.services-heading .invisible { visibility: hidden }
 .next-client { display: grid; justify-items: center; gap: 10px; text-align: center; padding: 24px 14px }
 .next-client p { color: var(--muted) }
 .next-client .finish { width: min(100%, 360px); margin-top: 2px }
