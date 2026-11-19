@@ -14,7 +14,6 @@ const queue = ref([
 ])
 const nextClient = computed(() => queue.value[0])
 const completed = ref(false)
-const completionDialog = ref<HTMLDialogElement | null>(null)
 const clientTitle = ref<HTMLHeadingElement | null>(null)
 const elapsed = ref(1107)
 const workTime = ref(22835)
@@ -79,7 +78,6 @@ function setWorking(value: boolean) {
 function finishService() {
   completed.value = true
   editing.value = false
-  completionDialog.value?.showModal()
 }
 
 async function closeCompletedClient() {
@@ -137,7 +135,7 @@ function addService() {
       <section v-if="currentClient" class="client" aria-labelledby="client-title">
         <div class="client-heading">
           <h2 id="client-title" ref="clientTitle" tabindex="-1">{{ !completed ? 'Клиент в работе' : 'Услуга завершена' }}</h2>
-          <span class="pill"><i /> {{ !completed ? (working ? 'Выполнение услуги' : 'На паузе') : 'Выполнено' }}</span>
+          <span class="pill" role="status"><i /> {{ !completed ? (working ? 'Выполнение услуги' : 'На паузе') : 'Выполнено' }}</span>
         </div>
         <p class="client-name"><span class="avatar"><DashboardIcon name="user" /></span> {{ currentClient.name }} · Начало: {{ currentClient.startedAt }}</p>
         <div class="timer">{{ time(elapsed) }}</div>
@@ -158,7 +156,9 @@ function addService() {
           </ul>
         </div>
 
-        <button class="finish" :disabled="completed" @click="finishService"><DashboardIcon name="check" /> {{ completed ? 'Выполнение завершено' : 'Завершить выполнение' }}</button>
+        <button class="finish" @click="completed ? closeCompletedClient() : finishService()">
+          <DashboardIcon name="check" /> {{ completed ? 'Закрыть экран' : 'Завершить выполнение' }}
+        </button>
       </section>
       <section v-else class="client next-client" aria-labelledby="next-client-title">
         <span class="round"><DashboardIcon :name="nextClient ? 'user' : 'people'" /></span>
@@ -203,16 +203,6 @@ function addService() {
         <button aria-label="Меню" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen"><DashboardIcon name="menu" /></button>
       </nav>
     </div>
-    <Teleport to="body">
-      <dialog ref="completionDialog" class="completion-dialog" aria-labelledby="completion-title" @close="closeCompletedClient">
-        <span class="round"><DashboardIcon name="check" /></span>
-        <h2 id="completion-title">Услуга завершена</h2>
-        <p>Закройте экран клиента, чтобы вернуться к очереди.</p>
-        <form method="dialog">
-          <button class="finish" autofocus>Закрыть экран</button>
-        </form>
-      </dialog>
-    </Teleport>
   </div>
 </template>
 
@@ -273,7 +263,6 @@ i{width:.65em;height:.65em;border-radius:50%;background:#00bd16;flex:none}
 .service-form input{max-width:100%;width:12em;border:1px solid #a4b2be;border-radius:6px;padding:4px}
 .service-form input[type=number]{width:5em}
 .finish{background:linear-gradient(115deg,#e84523,#da3918);color:#fff;border:0;border-radius:16px;width:100%;min-height:clamp(43px,8vw,57px);margin-top:14px;justify-content:center;gap:.7em;font-weight:750;font-size:clamp(16px,3.3vw,23px)}
-.finish:disabled{background:#d9eeee;color:#006d71}
 .queue,.appointments{margin-top:12px}
 .queue{border-color:#e0e4ef}
 .queue-button{border:0;background:none;color:inherit;width:100%;padding:10px clamp(10px,3vw,21px);text-align:left}
@@ -303,22 +292,6 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .next-client { display: grid; justify-items: center; gap: 10px; text-align: center; padding: 24px 14px }
 .next-client p { color: var(--muted) }
 .next-client .finish { width: min(100%, 360px); margin-top: 2px }
-.completion-dialog {
-  --mint: #d9eeee;
-  --teal: #007b80;
-  width: min(calc(100% - 32px), 400px);
-  border: 1px solid #b9e4e3;
-  border-radius: 20px;
-  padding: 22px;
-  color: #101725;
-  background: #f5fafb;
-  text-align: center;
-}
-.completion-dialog::backdrop { background: #10172580 }
-.completion-dialog .round { width: 44px; margin: 0 auto 10px; font-size: 22px }
-.completion-dialog p { margin-top: 8px; color: #59647a }
-.completion-dialog .finish { margin-top: 18px; min-height: 44px; font-size: 16px }
-
 @media (min-width: 900px) {
   .dashboard {
     min-height: 0;
