@@ -11,10 +11,35 @@ const currentClient = ref<{ name: string, startedAt: string } | null>(emptyQueue
   startedAt: 'Сегодня, 08:00',
 })
 const queue = ref(emptyQueueDemo ? [] : [
-  { name: 'Григорьев Алексей', arrival: 'Сегодня, 08:30' },
-  { name: 'Соколова Анна', arrival: 'Сегодня, 08:45' },
-  { name: 'Орлов Дмитрий', arrival: 'Сегодня, 09:00' },
-  { name: 'Волкова Мария', arrival: 'Сегодня, 09:15' },
+  {
+    name: 'Григорьев Алексей',
+    arrival: 'Сегодня, 08:30',
+    services: [
+      { name: 'Консультация', minutes: 15 },
+      { name: 'Подбор программы', minutes: 15 },
+    ],
+  },
+  {
+    name: 'Соколова Анна',
+    arrival: 'Сегодня, 08:45',
+    services: [
+      { name: 'Консультация', minutes: 15 },
+    ],
+  },
+  {
+    name: 'Орлов Дмитрий',
+    arrival: 'Сегодня, 09:00',
+    services: [
+      { name: 'Подбор программы', minutes: 15 },
+    ],
+  },
+  {
+    name: 'Волкова Мария',
+    arrival: 'Сегодня, 09:15',
+    services: [
+      { name: 'Консультация', minutes: 15 },
+    ],
+  },
 ])
 const nextClient = computed(() => queue.value[0])
 const completed = ref(false)
@@ -126,7 +151,7 @@ async function acceptClient() {
   currentClient.value = { name: client.name, startedAt: 'Сегодня, ' + clock.format(new Date()) }
   setWorking(true)
   elapsed.value = 0
-  services.value = [{ name: 'Консультация', minutes: 15 }]
+  services.value = client.services.map(service => ({ ...service }))
   serviceName.value = ''
   serviceMinutes.value = 15
   queueOpen.value = false
@@ -197,6 +222,14 @@ function addService() {
           <h2 id="next-client-title" ref="clientTitle" tabindex="-1">{{ nextClient ? 'Следующий клиент' : 'Пока клиентов нет' }}</h2>
           <template v-if="nextClient">
             <p><strong>{{ nextClient.name }}</strong> · {{ nextClient.arrival }}</p>
+            <div class="services next-client-services">
+              <h3 class="services-heading">Услуги ({{ nextClient.services.length }})</h3>
+              <ul>
+                <li v-for="(service, index) in nextClient.services" :key="index">
+                  <strong>{{ service.name }}</strong><span>{{ service.minutes }} мин</span>
+                </li>
+              </ul>
+            </div>
             <button class="finish" @click="acceptClient"><DashboardIcon name="play" /> Принять клиента</button>
           </template>
           <p v-else>Очередь пуста.</p>
@@ -323,6 +356,8 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .services-heading .invisible { visibility: hidden }
 .next-client { display: grid; justify-items: center; gap: 10px; text-align: center; padding: 24px 14px }
 .next-client p { color: var(--muted) }
+.next-client-services { width: 100%; text-align: left }
+.next-client-services h3 { margin: 0 }
 .next-client .finish {
   width: 100%;
   min-height: clamp(64px, 11vw, 96px);
