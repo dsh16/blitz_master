@@ -314,7 +314,13 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .services-heading .invisible { visibility: hidden }
 .next-client { display: grid; justify-items: center; gap: 10px; text-align: center; padding: 24px 14px }
 .next-client p { color: var(--muted) }
-.next-client .finish { width: min(100%, 360px); margin-top: 2px }
+.next-client .finish {
+  width: 100%;
+  min-height: clamp(64px, 11vw, 96px);
+  margin-top: 6px;
+  padding: 12px;
+  font-size: clamp(22px, 4.3vw, 34px);
+}
 @media (min-width: 900px) {
   .dashboard {
     min-height: 0;
