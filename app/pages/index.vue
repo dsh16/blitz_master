@@ -215,7 +215,6 @@ function addService() {
         <header><span class="round"><DashboardIcon name="calendar" /></span><div><h2 id="appointments-title">Предстоящие онлайн-записи</h2><p>Будьте на рабочем месте в указанное время</p></div></header>
         <ul>
           <li v-for="appointment in appointments" :key="appointment.time">
-            <span class="video"><DashboardIcon name="video" /></span>
             <div><strong>Сегодня, {{ appointment.time }}</strong><small>Онлайн-консультация ({{ appointment.minutes }} минут)</small></div>
             <span class="pill">Через {{ appointment.in }}</span>
           </li>
@@ -255,7 +254,7 @@ svg{width:1.25em;height:1.25em;flex:none}
 .profile{gap:clamp(9px,3vw,22px);margin:0 12px 26px}
 .profile h1{font-size:clamp(16px,3.6vw,27px);line-height:1.1;letter-spacing:-.04em}
 .profile p{color:var(--muted);margin-top:4px;font-size:clamp(14px,2.9vw,21px)}
-.avatar,.round,.video,.live-check{display:grid;place-items:center;flex:none}
+.avatar,.round,.live-check{display:grid;place-items:center;flex:none}
 .avatar{width:clamp(38px,9vw,67px);aspect-ratio:1;border-radius:25%;background:#e7e9f1;color:#626b80;font-size:clamp(19px,4vw,34px)}
 .live,.pill,.count{border-radius:100px;white-space:nowrap}
 .live{margin-left:auto;background:#e0f0f0;gap:7px;padding:9px 12px;font-size:clamp(10px,2.4vw,18px);font-weight:700}
@@ -311,10 +310,9 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .appointments{background:#f0f2fd;border-color:#dce0fc;padding:7px}
 .appointments header{gap:12px;padding:0 7px 6px}
 .appointments header .round{background:#dee2ff;color:#2949f7;width:clamp(33px,7vw,50px)}
-.appointments li{gap:clamp(5px,2vw,16px);padding:5px 0}
+.appointments li{gap:clamp(5px,2vw,16px);padding:7px 0}
 .appointments li strong{font-size:clamp(10px,2.25vw,16px);display:block}
 .appointments li .pill{margin-left:auto;font-size:clamp(8px,1.9vw,14px)}
-.video{background:var(--mint);color:var(--teal);width:clamp(25px,7.5vw,55px);height:clamp(24px,5vw,38px);border-radius:12px;font-size:clamp(13px,3vw,23px)}
 .navigation{position:relative;margin-top:clamp(18px,5vw,42px)}
 .toolbar{background:linear-gradient(110deg,#00777f,#007479);color:white;border-radius:24px;justify-content:space-around;padding:10px;min-height:clamp(62px,14vw,110px)}
 .toolbar a,.toolbar button{display:grid;place-items:center;color:inherit;background:none;border:0;border-radius:50%;width:clamp(40px,11vw,80px);aspect-ratio:1;font-size:clamp(22px,5vw,40px)}
@@ -382,7 +380,6 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
   .appointments header { padding: 0 4px 4px; gap: 7px }
   .appointments li { gap: 6px; padding-block: 4px }
   .appointments li .pill { padding-inline: 5px }
-  .video { border-radius: 7px }
 
   .navigation { margin-top: clamp(16px, 5vw, 28px) }
   .toolbar {
@@ -397,7 +394,7 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
   .stat { gap: 4px }
   .stat.break { display: grid; grid-template-columns: auto minmax(0, 1fr) }
   .break .count { grid-column: 2; justify-self: start; margin: 0 }
-  .appointments li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto }
+  .appointments li { display: grid; grid-template-columns: minmax(0, 1fr) auto }
   .appointments li .pill { white-space: normal; max-width: 76px; text-align: center }
 }
 </style>
