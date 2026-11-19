@@ -74,6 +74,12 @@ onMounted(() => {
   reserveClientArea()
   window.addEventListener('resize', fitDesktop)
   fitDesktop()
+  void document.fonts.ready.then(() => {
+    if (!dashboard.value) return
+    reserveClientArea()
+    measuredWidth = 0
+    fitDesktop()
+  })
   timer = setInterval(() => {
     if (working.value) {
       workTime.value++
@@ -234,12 +240,11 @@ function addService() {
 </template>
 
 <style>
-:root{font-family:Inter,system-ui,sans-serif;color:#101725;background:#e9ecf4;font-synthesis:none}
+:root{color:#101725;background:#e9ecf4;font-synthesis:none}
 *{box-sizing:border-box}
 body{margin:0}
 h1,h2,p,ul{margin:0}
 ul{padding:0;list-style:none}
-button,input{font:inherit}
 button{cursor:pointer}
 button:disabled{cursor:default}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #384dff;outline-offset:3px}
