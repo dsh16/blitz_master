@@ -2,7 +2,20 @@
 useHead({ title: 'Blitz Master — Рабочий экран', htmlAttrs: { lang: 'ru' } })
 
 const working = ref(true)
-const active = ref(true)
+const currentClient = ref<{ name: string, startedAt: string } | null>({
+  name: 'Иляхин Сергей',
+  startedAt: 'Сегодня, 08:00',
+})
+const queue = ref([
+  { name: 'Григорьев Алексей', arrival: 'Сегодня, 08:30' },
+  { name: 'Соколова Анна', arrival: 'Сегодня, 08:45' },
+  { name: 'Орлов Дмитрий', arrival: 'Сегодня, 09:00' },
+  { name: 'Волкова Мария', arrival: 'Сегодня, 09:15' },
+])
+const nextClient = computed(() => queue.value[0])
+const completed = ref(false)
+const completionDialog = ref<HTMLDialogElement | null>(null)
+const clientTitle = ref<HTMLHeadingElement | null>(null)
 const elapsed = ref(1107)
 const workTime = ref(22835)
 const breakTime = ref(2700)
@@ -41,7 +54,7 @@ onMounted(() => {
   timer = setInterval(() => {
     if (working.value) {
       workTime.value++
-      if (active.value) elapsed.value++
+      if (currentClient.value && !completed.value) elapsed.value++
     } else {
       breakTime.value++
     }
@@ -61,6 +74,35 @@ function time(seconds: number) {
 function setWorking(value: boolean) {
   if (!value && working.value) breakCount.value++
   working.value = value
+}
+
+function finishService() {
+  completed.value = true
+  editing.value = false
+  completionDialog.value?.showModal()
+}
+
+async function closeCompletedClient() {
+  currentClient.value = null
+  completed.value = false
+  await nextTick()
+  clientTitle.value?.focus()
+}
+
+async function acceptClient() {
+  const client = queue.value.shift()
+  if (!client) return
+
+  const clock = new Intl.DateTimeFormat('ru-RU', { hour: '2-digit', minute: '2-digit' })
+  currentClient.value = { name: client.name, startedAt: 'Сегодня, ' + clock.format(new Date()) }
+  setWorking(true)
+  elapsed.value = 0
+  services.value = [{ name: 'Консультация', minutes: 15 }]
+  serviceName.value = ''
+  serviceMinutes.value = 15
+  queueOpen.value = false
+  await nextTick()
+  clientTitle.value?.focus()
 }
 
 function addService() {
@@ -92,21 +134,21 @@ function addService() {
         <div class="stat break"><span class="round"><DashboardIcon name="cup" /></span><div>Перерывы сегодня<strong>{{ time(breakTime) }}</strong></div><span class="count">{{ breakCount }} раза</span></div>
       </div>
 
-      <section class="client" aria-labelledby="client-title">
+      <section v-if="currentClient" class="client" aria-labelledby="client-title">
         <div class="client-heading">
-          <h2 id="client-title">{{ active ? 'Клиент в работе' : 'Услуга завершена' }}</h2>
-          <span class="pill"><i /> {{ active ? (working ? 'Выполнение услуги' : 'На паузе') : 'Выполнено' }}</span>
+          <h2 id="client-title" ref="clientTitle" tabindex="-1">{{ !completed ? 'Клиент в работе' : 'Услуга завершена' }}</h2>
+          <span class="pill"><i /> {{ !completed ? (working ? 'Выполнение услуги' : 'На паузе') : 'Выполнено' }}</span>
         </div>
-        <p class="client-name"><span class="avatar"><DashboardIcon name="user" /></span> Иляхин Сергей · Начало: Сегодня, 08:00</p>
+        <p class="client-name"><span class="avatar"><DashboardIcon name="user" /></span> {{ currentClient.name }} · Начало: {{ currentClient.startedAt }}</p>
         <div class="timer">{{ time(elapsed) }}</div>
         <div class="recommended"><DashboardIcon name="timer" /><span>Рекомендуемое время:</span><strong>{{ recommended }} мин</strong></div>
 
         <div class="services">
           <div class="services-heading">
             <span>Услуги ({{ services.length }})</span>
-            <button v-if="active" class="pill" :aria-expanded="editing" @click="editing = !editing"><DashboardIcon name="plus" /> Добавить услугу</button>
+            <button v-if="!completed" class="pill" :aria-expanded="editing" @click="editing = !editing"><DashboardIcon name="plus" /> Добавить услугу</button>
           </div>
-          <form v-if="editing && active" class="service-form" @submit.prevent="addService">
+          <form v-if="editing && !completed" class="service-form" @submit.prevent="addService">
             <label>Название<input v-model="serviceName" required maxlength="80"></label>
             <label>Минуты<input v-model.number="serviceMinutes" type="number" required min="1" max="480"></label>
             <button class="pill" type="submit">Добавить</button>
@@ -116,15 +158,24 @@ function addService() {
           </ul>
         </div>
 
-        <button class="finish" :disabled="!active" @click="active = false; editing = false"><DashboardIcon name="check" /> {{ active ? 'Завершить выполнение' : 'Выполнение завершено' }}</button>
+        <button class="finish" :disabled="completed" @click="finishService"><DashboardIcon name="check" /> {{ completed ? 'Выполнение завершено' : 'Завершить выполнение' }}</button>
+      </section>
+      <section v-else class="client next-client" aria-labelledby="next-client-title">
+        <span class="round"><DashboardIcon :name="nextClient ? 'user' : 'people'" /></span>
+        <h2 id="next-client-title" ref="clientTitle" tabindex="-1">{{ nextClient ? 'Следующий клиент' : 'Пока клиентов нет' }}</h2>
+        <template v-if="nextClient">
+          <p><strong>{{ nextClient.name }}</strong> · {{ nextClient.arrival }}</p>
+          <button class="finish" @click="acceptClient"><DashboardIcon name="play" /> Принять клиента</button>
+        </template>
+        <p v-else>Очередь пуста.</p>
       </section>
 
-      <section id="queue" class="queue">
+      <section v-if="currentClient && nextClient" id="queue" class="queue">
         <button class="queue-button" :aria-expanded="queueOpen" @click="queueOpen = !queueOpen">
-          <span class="queue-top"><span>Следующий в очереди</span><span><DashboardIcon name="people" /> Ожидают: 4</span></span>
-          <span class="queue-person"><span class="avatar"><DashboardIcon name="user" /></span><span><strong>Григорьев Алексей</strong><small>Сегодня, 08:30</small></span><DashboardIcon class="queue-arrow" name="chevron" /></span>
+          <span class="queue-top"><span>Следующий в очереди</span><span><DashboardIcon name="people" /> Ожидают: {{ queue.length }}</span></span>
+          <span class="queue-person"><span class="avatar"><DashboardIcon name="user" /></span><span><strong>{{ nextClient.name }}</strong><small>{{ nextClient.arrival }}</small></span><DashboardIcon class="queue-arrow" name="chevron" /></span>
         </button>
-        <p v-if="queueOpen" class="queue-detail">Григорьев Алексей — первый в очереди. Всего ожидают 4 клиента.</p>
+        <p v-if="queueOpen" class="queue-detail">{{ queue.map(client => client.name).join(' · ') }}</p>
       </section>
 
       <section id="appointments" class="appointments" aria-labelledby="appointments-title">
@@ -142,16 +193,26 @@ function addService() {
     <div class="navigation">
       <nav v-if="menuOpen" class="quick-menu" aria-label="Разделы">
         <a href="#work" @click="menuOpen = false">Рабочий экран</a>
-        <a href="#queue" @click="menuOpen = false">Очередь</a>
+        <a :href="currentClient && nextClient ? '#queue' : currentClient ? '#client-title' : '#next-client-title'" @click="menuOpen = false">Очередь</a>
         <a href="#appointments" @click="menuOpen = false">Онлайн-записи</a>
       </nav>
       <nav class="toolbar" aria-label="Основная навигация">
         <a href="#appointments" aria-label="Онлайн-записи"><DashboardIcon name="booking" /></a>
         <a href="#work" class="selected" aria-label="Рабочий экран"><DashboardIcon name="grid" /></a>
-        <a href="#queue" aria-label="Очередь"><DashboardIcon name="network" /></a>
+        <a :href="currentClient && nextClient ? '#queue' : currentClient ? '#client-title' : '#next-client-title'" aria-label="Очередь"><DashboardIcon name="network" /></a>
         <button aria-label="Меню" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen"><DashboardIcon name="menu" /></button>
       </nav>
     </div>
+    <Teleport to="body">
+      <dialog ref="completionDialog" class="completion-dialog" aria-labelledby="completion-title" @close="closeCompletedClient">
+        <span class="round"><DashboardIcon name="check" /></span>
+        <h2 id="completion-title">Услуга завершена</h2>
+        <p>Закройте экран клиента, чтобы вернуться к очереди.</p>
+        <form method="dialog">
+          <button class="finish" autofocus>Закрыть экран</button>
+        </form>
+      </dialog>
+    </Teleport>
   </div>
 </template>
 
@@ -239,6 +300,25 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
 .toolbar .selected{background:var(--orange);color:#fff}
 .quick-menu{position:absolute;bottom:calc(100% + 6px);right:10px;display:grid;gap:8px;padding:12px;background:white;border-radius:12px;box-shadow:0 4px 20px #0002}
 .quick-menu a{color:#006d71}
+.next-client { display: grid; justify-items: center; gap: 10px; text-align: center; padding: 24px 14px }
+.next-client p { color: var(--muted) }
+.next-client .finish { width: min(100%, 360px); margin-top: 2px }
+.completion-dialog {
+  --mint: #d9eeee;
+  --teal: #007b80;
+  width: min(calc(100% - 32px), 400px);
+  border: 1px solid #b9e4e3;
+  border-radius: 20px;
+  padding: 22px;
+  color: #101725;
+  background: #f5fafb;
+  text-align: center;
+}
+.completion-dialog::backdrop { background: #10172580 }
+.completion-dialog .round { width: 44px; margin: 0 auto 10px; font-size: 22px }
+.completion-dialog p { margin-top: 8px; color: #59647a }
+.completion-dialog .finish { margin-top: 18px; min-height: 44px; font-size: 16px }
+
 @media (min-width: 900px) {
   .dashboard {
     min-height: 0;
