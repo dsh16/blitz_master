@@ -53,6 +53,8 @@ function reserveClientArea() {
 }
 
 function fitDesktop() {
+  if (emptyQueueDemo) return
+
   if (window.innerWidth < 900) {
     measuredWidth = 0
     return
@@ -137,7 +139,7 @@ function addService() {
 </script>
 
 <template>
-  <div ref="dashboard" class="dashboard" :style="{ '--desktop-scale': desktopScale }">
+  <div ref="dashboard" class="dashboard" :class="{ 'dashboard--empty-demo': emptyQueueDemo }" :style="{ '--desktop-scale': desktopScale }">
     <main id="work">
       <header class="profile">
         <span class="avatar"><DashboardIcon name="user" /></span>
@@ -326,7 +328,7 @@ small,.appointments p,.queue-detail{display:block;color:var(--muted);font-size:c
   font-size: clamp(22px, 4.3vw, 34px);
 }
 @media (min-width: 900px) {
-  .dashboard {
+  .dashboard:not(.dashboard--empty-demo) {
     min-height: 0;
     zoom: var(--desktop-scale, 1);
   }
