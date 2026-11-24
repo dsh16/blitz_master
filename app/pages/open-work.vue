@@ -2,10 +2,27 @@
 useHead({ title: 'Blitz Master — Открытие смены', htmlAttrs: { lang: 'ru' } })
 
 const menuOpen = ref(false)
+const shiftScreen = ref<HTMLElement | null>(null)
+const desktopScale = ref(1)
+
+function fitDesktop() {
+  if (window.innerWidth < 900 || !shiftScreen.value) return
+
+  const height = shiftScreen.value.offsetHeight
+  if (height) desktopScale.value = Math.min(1, Math.max(1, window.innerHeight - 16) / height)
+}
+
+onMounted(() => {
+  fitDesktop()
+  window.addEventListener('resize', fitDesktop)
+  void document.fonts.ready.then(fitDesktop)
+})
+
+onUnmounted(() => window.removeEventListener('resize', fitDesktop))
 </script>
 
 <template>
-  <div class="shift-screen">
+  <div ref="shiftScreen" class="shift-screen" :style="{ '--desktop-scale': desktopScale }">
     <main class="shift-content">
       <header class="shift-profile">
         <span class="shift-icon avatar"><DashboardIcon name="user" /></span>
@@ -247,6 +264,11 @@ const menuOpen = ref(false)
 .shift-menu a { color: #006d71 }
 
 @media (min-width: 900px) {
+  .shift-screen {
+    min-height: 0;
+    zoom: var(--desktop-scale, 1);
+  }
+
   .intro { margin-block: clamp(14px, 2.5vh, 28px) }
   .illustration { width: min(91%, 540px) }
   .intro h1 { font-size: clamp(29px, 3vw, 38px) }
