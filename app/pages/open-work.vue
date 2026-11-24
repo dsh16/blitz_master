@@ -91,7 +91,6 @@ onUnmounted(() => window.removeEventListener('resize', fitDesktop))
         <NuxtLink class="day-item bookings" to="/#appointments">
           <span class="shift-icon"><DashboardIcon name="calendar" /></span>
           <span>Онлайн-записей: 3</span>
-          <DashboardIcon class="chevron" name="chevron" />
         </NuxtLink>
       </div>
 
@@ -202,7 +201,6 @@ onUnmounted(() => window.removeEventListener('resize', fitDesktop))
   text-decoration: none;
 }
 .bookings { border-inline-start: 1px solid #dce0eb; color: #343e55 }
-.bookings .chevron { margin-left: auto }
 .plan-card { padding: clamp(9px, 2.7vw, 22px); margin-top: clamp(9px, 2.5vw, 18px) }
 .plan-card h2 { color: var(--muted); font-size: clamp(14px, 2.85vw, 22px); font-weight: 450 }
 .plan-card dl { margin-top: clamp(7px, 2vw, 16px) }
