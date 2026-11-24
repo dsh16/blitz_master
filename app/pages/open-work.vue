@@ -146,7 +146,7 @@ const menuOpen = ref(false)
   font-size: clamp(18px, 3.5vw, 31px);
 }
 .avatar { border-radius: 23%; width: clamp(34px, 8vw, 60px) }
-.master strong { font-size: clamp(14px, 3.5vw, 25px); letter-spacing: -.035em }
+.master strong { font-weight: 600; font-size: clamp(14px, 3.5vw, 25px); letter-spacing: -.035em }
 .master p { color: var(--muted); font-size: clamp(12px, 2.8vw, 20px); margin-top: 3px }
 .live {
   margin-left: auto;
@@ -155,20 +155,20 @@ const menuOpen = ref(false)
   padding: clamp(6px, 1.5vw, 12px);
   gap: clamp(4px, 1.3vw, 10px);
   white-space: nowrap;
-  font-weight: 700;
+  font-weight: 600;
   font-size: clamp(10px, 2.5vw, 18px);
 }
 .live-check { background: var(--teal); color: white; border-radius: 5px; padding: 3px }
 .live-dot { width: .6em; aspect-ratio: 1; border-radius: 50%; background: #00bf17 }
 .intro { text-align: center; margin: clamp(24px, 5vw, 44px) auto clamp(28px, 7vw, 62px) }
-.illustration { display: block; width: min(66%, 350px); margin: 0 auto clamp(9px, 2vw, 18px) }
-.intro h1 { font-size: clamp(22px, 5.4vw, 39px); letter-spacing: -.045em; line-height: 1.12 }
+.illustration { display: block; width: min(78%, 420px); margin: 0 auto clamp(9px, 2vw, 18px) }
+.intro h1 { font-weight: 600; font-size: clamp(22px, 5.4vw, 39px); letter-spacing: -.045em; line-height: 1.12 }
 .intro p {
   max-width: 35ch;
   margin: clamp(8px, 2vw, 17px) auto 0;
   color: var(--muted);
   font-size: clamp(13px, 3.2vw, 23px);
-  font-weight: 550;
+  font-weight: 450;
   line-height: 1.35;
 }
 .day-card, .plan-card { border: 1px solid #e0e4ef; border-radius: clamp(13px, 3vw, 22px) }
@@ -179,17 +179,17 @@ const menuOpen = ref(false)
   padding: 0 clamp(5px, 2.2vw, 18px);
   color: inherit;
   font-size: clamp(11px, 2.65vw, 20px);
-  font-weight: 650;
+  font-weight: 550;
   text-decoration: none;
 }
 .bookings { border-inline-start: 1px solid #dce0eb; color: #343e55 }
 .bookings .chevron { margin-left: auto }
 .plan-card { padding: clamp(9px, 2.7vw, 22px); margin-top: clamp(9px, 2.5vw, 18px) }
-.plan-card h2 { color: var(--muted); font-size: clamp(14px, 2.85vw, 22px); font-weight: 650 }
+.plan-card h2 { color: var(--muted); font-size: clamp(14px, 2.85vw, 22px); font-weight: 550 }
 .plan-card dl { margin-top: clamp(7px, 2vw, 16px) }
 .plan-row { gap: 7px; justify-content: space-between; padding: clamp(5px, 1.1vw, 9px) 0 }
 .plan-row + .plan-row { border-top: 1px solid #e0e4ef }
-.plan-row dt { gap: clamp(6px, 2.2vw, 18px); font-weight: 650 }
+.plan-row dt { gap: clamp(6px, 2.2vw, 18px); font-weight: 550 }
 .plan-row :is(dt, dd) { font-size: clamp(11px, 2.65vw, 20px) }
 .plan-row dd { color: var(--muted); text-align: right }
 .clock { background: #d9eeee; color: var(--teal) }
@@ -204,7 +204,7 @@ const menuOpen = ref(false)
   background: linear-gradient(115deg, #e84523, #da3918);
   color: #fff;
   font-size: clamp(17px, 3.65vw, 27px);
-  font-weight: 750;
+  font-weight: 600;
   text-decoration: none;
 }
 .shift-navigation { position: relative; margin-top: clamp(30px, 9vw, 100px) }
@@ -245,10 +245,10 @@ const menuOpen = ref(false)
 .shift-menu a { color: #006d71 }
 
 @media (min-width: 900px) {
-  .shift-screen { max-width: 620px }
-  .intro { margin-block: clamp(16px, 3vh, 34px) }
-  .illustration { width: min(65%, 31vh, 320px) }
-  .intro h1 { font-size: clamp(27px, 4.8vh, 38px) }
+  .shift-screen { width: min(calc(100% - 48px), 760px) }
+  .intro { margin-block: clamp(22px, 4vh, 44px) }
+  .illustration { width: min(70%, 460px) }
+  .intro h1 { font-size: clamp(29px, 3vw, 38px) }
   .intro p { font-size: 18px }
   .shift-icon { width: 44px; font-size: 23px }
   .open-shift { margin-top: clamp(16px, 3vh, 34px); min-height: 60px; font-size: 23px }
