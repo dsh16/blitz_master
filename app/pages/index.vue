@@ -272,9 +272,8 @@ function addService() {
 </template>
 
 <style>
-:root{color:#101725;background:#e9ecf4;font-synthesis:none}
+:root{color:#101725;font-synthesis:none}
 *{box-sizing:border-box}
-body{margin:0}
 h1,h2,p,ul{margin:0}
 ul{padding:0;list-style:none}
 button{cursor:pointer}
