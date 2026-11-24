@@ -21,7 +21,7 @@ const menuOpen = ref(false)
       </header>
 
       <section class="intro" aria-labelledby="shift-title">
-        <svg class="illustration" viewBox="0 0 440 310" fill="none" aria-hidden="true">
+        <svg class="illustration" viewBox="8 7 428 318" fill="none" aria-hidden="true">
           <defs>
             <linearGradient id="shift-paper" x1="104" y1="80" x2="302" y2="262" gradientUnits="userSpaceOnUse">
               <stop stop-color="#fff" />
@@ -37,26 +37,28 @@ const menuOpen = ref(false)
             </filter>
           </defs>
           <path fill="#dcedee" d="M14 183c0-57 51-104 119-105 20 0 39 1 57-8C211 25 250 4 293 10c56 7 102 61 104 114 1 20-4 35-7 48 28 13 44 34 44 60 0 36-29 65-72 65-46 0-63-25-111-28-39-2-81 10-126 7C62 272 14 235 14 183Z" />
-          <g transform="rotate(-9 206 164)" filter="url(#shift-shadow)">
-            <rect x="112" y="81" width="184" height="165" rx="24" fill="#91c9cb" />
-            <rect x="118" y="78" width="184" height="164" rx="24" fill="url(#shift-paper)" />
-            <path fill="url(#shift-teal)" d="M142 78h136a24 24 0 0 1 24 24v24H118v-24a24 24 0 0 1 24-24Z" />
-            <rect x="154" y="55" width="19" height="53" rx="9.5" fill="#006168" />
-            <rect x="157" y="54" width="17" height="52" rx="8.5" fill="url(#shift-teal)" />
-            <rect x="247" y="55" width="19" height="53" rx="9.5" fill="#006168" />
-            <rect x="250" y="54" width="17" height="52" rx="8.5" fill="url(#shift-teal)" />
-            <g fill="#bfe0e1">
-              <rect x="148" y="144" width="27" height="27" rx="5" />
-              <rect x="194" y="144" width="27" height="27" rx="5" />
-              <rect x="240" y="144" width="27" height="27" rx="5" />
-              <rect x="148" y="188" width="27" height="27" rx="5" />
-              <rect x="194" y="188" width="27" height="27" rx="5" />
+          <g transform="translate(-49 -33) scale(1.24)">
+            <g transform="rotate(-9 206 164)" filter="url(#shift-shadow)">
+              <rect x="112" y="81" width="184" height="165" rx="24" fill="#91c9cb" />
+              <rect x="118" y="78" width="184" height="164" rx="24" fill="url(#shift-paper)" />
+              <path fill="url(#shift-teal)" d="M142 78h136a24 24 0 0 1 24 24v24H118v-24a24 24 0 0 1 24-24Z" />
+              <rect x="154" y="55" width="19" height="53" rx="9.5" fill="#006168" />
+              <rect x="157" y="54" width="17" height="52" rx="8.5" fill="url(#shift-teal)" />
+              <rect x="247" y="55" width="19" height="53" rx="9.5" fill="#006168" />
+              <rect x="250" y="54" width="17" height="52" rx="8.5" fill="url(#shift-teal)" />
+              <g fill="#bfe0e1">
+                <rect x="148" y="144" width="27" height="27" rx="5" />
+                <rect x="194" y="144" width="27" height="27" rx="5" />
+                <rect x="240" y="144" width="27" height="27" rx="5" />
+                <rect x="148" y="188" width="27" height="27" rx="5" />
+                <rect x="194" y="188" width="27" height="27" rx="5" />
+              </g>
             </g>
-          </g>
-          <g filter="url(#shift-shadow)">
-            <circle cx="315" cy="221" r="55" fill="url(#shift-teal)" stroke="#00777d" stroke-width="2" />
-            <circle cx="315" cy="221" r="42" fill="url(#shift-paper)" />
-            <path d="m311 204 3 20 19-9" stroke="#00898e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+            <g filter="url(#shift-shadow)">
+              <circle cx="315" cy="221" r="55" fill="url(#shift-teal)" stroke="#00777d" stroke-width="2" />
+              <circle cx="315" cy="221" r="42" fill="url(#shift-paper)" />
+              <path d="m311 204 3 20 19-9" stroke="#00898e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+            </g>
           </g>
         </svg>
 
@@ -146,7 +148,7 @@ const menuOpen = ref(false)
   font-size: clamp(18px, 3.5vw, 31px);
 }
 .avatar { border-radius: 23%; width: clamp(34px, 8vw, 60px) }
-.master strong { font-weight: 600; font-size: clamp(14px, 3.5vw, 25px); letter-spacing: -.035em }
+.master strong { font-weight: 500; font-size: clamp(14px, 3.5vw, 25px); letter-spacing: -.035em }
 .master p { color: var(--muted); font-size: clamp(12px, 2.8vw, 20px); margin-top: 3px }
 .live {
   margin-left: auto;
@@ -155,20 +157,20 @@ const menuOpen = ref(false)
   padding: clamp(6px, 1.5vw, 12px);
   gap: clamp(4px, 1.3vw, 10px);
   white-space: nowrap;
-  font-weight: 600;
+  font-weight: 500;
   font-size: clamp(10px, 2.5vw, 18px);
 }
 .live-check { background: var(--teal); color: white; border-radius: 5px; padding: 3px }
 .live-dot { width: .6em; aspect-ratio: 1; border-radius: 50%; background: #00bf17 }
-.intro { text-align: center; margin: clamp(24px, 5vw, 44px) auto clamp(28px, 7vw, 62px) }
-.illustration { display: block; width: min(78%, 420px); margin: 0 auto clamp(9px, 2vw, 18px) }
-.intro h1 { font-weight: 600; font-size: clamp(22px, 5.4vw, 39px); letter-spacing: -.045em; line-height: 1.12 }
+.intro { text-align: center; margin: clamp(18px, 4vw, 34px) auto clamp(20px, 5vw, 44px) }
+.illustration { display: block; width: min(94%, 520px); height: auto; margin: 0 auto clamp(8px, 1.6vw, 16px) }
+.intro h1 { font-weight: 500; font-size: clamp(22px, 5.4vw, 39px); letter-spacing: -.045em; line-height: 1.12 }
 .intro p {
   max-width: 35ch;
   margin: clamp(8px, 2vw, 17px) auto 0;
   color: var(--muted);
   font-size: clamp(13px, 3.2vw, 23px);
-  font-weight: 450;
+  font-weight: 400;
   line-height: 1.35;
 }
 .day-card, .plan-card { border: 1px solid #e0e4ef; border-radius: clamp(13px, 3vw, 22px) }
@@ -179,17 +181,17 @@ const menuOpen = ref(false)
   padding: 0 clamp(5px, 2.2vw, 18px);
   color: inherit;
   font-size: clamp(11px, 2.65vw, 20px);
-  font-weight: 550;
+  font-weight: 450;
   text-decoration: none;
 }
 .bookings { border-inline-start: 1px solid #dce0eb; color: #343e55 }
 .bookings .chevron { margin-left: auto }
 .plan-card { padding: clamp(9px, 2.7vw, 22px); margin-top: clamp(9px, 2.5vw, 18px) }
-.plan-card h2 { color: var(--muted); font-size: clamp(14px, 2.85vw, 22px); font-weight: 550 }
+.plan-card h2 { color: var(--muted); font-size: clamp(14px, 2.85vw, 22px); font-weight: 450 }
 .plan-card dl { margin-top: clamp(7px, 2vw, 16px) }
 .plan-row { gap: 7px; justify-content: space-between; padding: clamp(5px, 1.1vw, 9px) 0 }
 .plan-row + .plan-row { border-top: 1px solid #e0e4ef }
-.plan-row dt { gap: clamp(6px, 2.2vw, 18px); font-weight: 550 }
+.plan-row dt { gap: clamp(6px, 2.2vw, 18px); font-weight: 450 }
 .plan-row :is(dt, dd) { font-size: clamp(11px, 2.65vw, 20px) }
 .plan-row dd { color: var(--muted); text-align: right }
 .clock { background: #d9eeee; color: var(--teal) }
@@ -204,7 +206,7 @@ const menuOpen = ref(false)
   background: linear-gradient(115deg, #e84523, #da3918);
   color: #fff;
   font-size: clamp(17px, 3.65vw, 27px);
-  font-weight: 600;
+  font-weight: 500;
   text-decoration: none;
 }
 .shift-navigation { position: relative; margin-top: clamp(30px, 9vw, 100px) }
@@ -245,14 +247,13 @@ const menuOpen = ref(false)
 .shift-menu a { color: #006d71 }
 
 @media (min-width: 900px) {
-  .shift-screen { width: min(calc(100% - 48px), 760px) }
-  .intro { margin-block: clamp(22px, 4vh, 44px) }
-  .illustration { width: min(70%, 460px) }
+  .intro { margin-block: clamp(14px, 2.5vh, 28px) }
+  .illustration { width: min(91%, 540px) }
   .intro h1 { font-size: clamp(29px, 3vw, 38px) }
   .intro p { font-size: 18px }
   .shift-icon { width: 44px; font-size: 23px }
   .open-shift { margin-top: clamp(16px, 3vh, 34px); min-height: 60px; font-size: 23px }
-  .shift-navigation { margin-top: clamp(16px, 4vh, 40px) }
+  .shift-navigation { margin-top: clamp(14px, 2.5vh, 30px) }
   .shift-toolbar { min-height: 68px }
   .shift-toolbar :is(a, button) { width: 54px; font-size: 26px }
 }
